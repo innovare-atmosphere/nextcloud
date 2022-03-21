@@ -89,7 +89,10 @@ resource "digitalocean_droplet" "www-nextcloud" {
       "systemctl restart nginx",
       "ufw allow http",
       "ufw allow https",
-      "%{if var.domain!= ""}certbot --nginx --non-interactive --agree-tos --domains ${var.domain} --redirect %{if var.webmaster_email!= ""} --email ${var.webmaster_email} %{ else } --register-unsafely-without-email %{ endif } %{ else }echo NOCERTBOT%{ endif }"
+      "%{if var.domain!= ""}certbot --nginx --non-interactive --agree-tos --domains ${var.domain} --redirect %{if var.webmaster_email!= ""} --email ${var.webmaster_email} %{ else } --register-unsafely-without-email %{ endif } %{ else }echo NOCERTBOT%{ endif }",
+      # Bugfix with nextcloud desktop client
+      "cd /root/nextcloud",
+      "docker exec -u www-data nextcloud_app_1 php occ config:system:set overwriteprotocol --type string --value https"
     ]
   }
 }

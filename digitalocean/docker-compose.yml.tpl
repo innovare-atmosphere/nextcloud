@@ -12,7 +12,7 @@ services:
     restart: always
 
   app:
-    image: nextcloud:fpm-alpine
+    image: nextcloud:production-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html
@@ -36,7 +36,7 @@ services:
       - app
 
   cron:
-    image: nextcloud:fpm-alpine
+    image: nextcloud:production-fpm-alpine
     restart: always
     volumes:
       - nextcloud:/var/www/html

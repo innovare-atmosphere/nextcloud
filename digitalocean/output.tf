@@ -15,5 +15,6 @@ output "username" {
 
 output "password" {
   description = "Admin password: "
+  sensitive   = true
   value       = "${var.admin_password != "" ? var.admin_password : random_password.admin_password.result}"
 }

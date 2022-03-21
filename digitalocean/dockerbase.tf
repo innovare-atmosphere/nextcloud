@@ -104,7 +104,7 @@ resource "digitalocean_droplet" "www-nextcloud" {
       # Bugfix with nextcloud desktop client & complete installation to avoid users with @ symbol breaking the installation wizard
       "cd /root/nextcloud",
       "docker exec -u www-data nextcloud_app_1 php occ maintenance:install --admin-user=atmosphere --admin-pass=${var.admin_password != "" ? var.admin_password : random_password.admin_password.result}",
-      "docker exec -u www-data nextcloud_app_1 php occ trusted_domains 0 --value ${var.domain}",
+      "docker exec -u www-data nextcloud_app_1 php occ config:system:set trusted_domains 0 --value ${var.domain}",
       "docker exec -u www-data nextcloud_app_1 php occ config:system:set overwriteprotocol --type string --value https"
     ]
   }

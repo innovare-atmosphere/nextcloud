@@ -100,10 +100,24 @@ resource "digitalocean_droplet" "www-nextcloud" {
       "ufw allow http",
       "ufw allow https",
       "sleep 5s",
-      "%{if var.domain!= ""}certbot --nginx --non-interactive --agree-tos --domains ${var.domain} --redirect %{if var.webmaster_email!= ""} --email ${var.webmaster_email} %{ else } --register-unsafely-without-email %{ endif } %{ else }echo NOCERTBOT%{ endif }",
+      "%{if var.domain!= ""}certbot --nginx --non-interactive --agree-tos --domains ${var.domain} --redirect %{if var.webmaster_email!= ""} --email ${var.webmaster_email} %{ else } --register-unsafely-without-email %{ endif } %{ else }echo NOCERTBOT%{ endif }"
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "export PATH=$PATH:/usr/bin",
       # Bugfix with nextcloud desktop client & complete installation to avoid users with @ symbol breaking the installation wizard
       "cd /root/nextcloud",
       "docker exec -u www-data nextcloud_app_1 php occ maintenance:install --admin-user=atmosphere --admin-pass=${var.admin_password != "" ? var.admin_password : random_password.admin_password.result}",
+    ]
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "export PATH=$PATH:/usr/bin",
+      # Bugfix desktop client fails to connect
+      "cd /root/nextcloud",
       "docker exec -u www-data nextcloud_app_1 php occ config:system:set trusted_domains 0 --value ${var.domain}",
       "docker exec -u www-data nextcloud_app_1 php occ config:system:set overwriteprotocol --type string --value https"
     ]

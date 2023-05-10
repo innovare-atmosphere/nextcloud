@@ -94,7 +94,7 @@ resource "digitalocean_droplet" "www-nextcloud" {
       "export PATH=$PATH:/usr/bin",
       # run compose
       "cd /root/nextcloud",
-      "docker-compose up -d",
+      "docker compose up -d",
       "rm /etc/nginx/sites-enabled/default",
       "systemctl restart nginx",
       "ufw allow http",
